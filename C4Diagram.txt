@@ -1,0 +1,145 @@
+// Insert Into https://structurizr.com/dsl
+
+workspace "Name" "Description" {
+
+    !identifiers hierarchical
+
+    model {
+        u = person "User"
+        
+        ss = softwareSystem "UwUgle Email Search System" {
+            sgui = container "Front end Angular"{
+                tags = "web"
+            }
+        
+            sfr = container "File Reader" {
+                sfrc = component "console Apllication"
+                sfrs = component "Service"
+                sfrr = component "file reader dall"
+            }
+            sfc = container "File Cleaner"{
+                sfcc = component "console Apllication"
+                sfcs = component "Service" 
+                }
+            sfi = container "file Indexer" {
+                sfic = component "console Apllication"
+                sfis = component "Service" 
+                sfir = component "Repository"
+            }
+            cleaner_que = container "message bus | que for files to be cleaned" {
+                tags = "Bus"
+            }
+            index_que = container "message bus | que for cleaned files to be indexed"{
+                tags = "Bus"
+            }
+            
+            ssearch = container "search engine"{
+                sapi = component "api"
+                ss = component "service"
+                sr = component "repository"
+            }
+            
+            db = container "Database Schema" {
+                tags "Database"
+            }
+            
+            fs = container "File system" {
+                tags "Database"
+            }
+        }
+        
+        u -> ss.sgui "user uses GUI"
+        ss.sgui -> ss.ssearch "sends search query request"
+        
+        ss.ssearch -> ss.db "sends sql query for files with indexed data"
+        ss.ssearch -> ss.db "request indexed file from db"
+
+        ss.sfr -> ss.fs "reads files from file system"
+        ss.sfr -> ss.cleaner_que "sends files to cleaned send to que"
+        ss.cleaner_que -> ss.sfc "Cleaner takes file from que"
+        ss.sfc -> ss.index_que "file cleaner sends cleaned file to que"
+        ss.index_que -> ss.sfi "file indexer takes cleaned file from que"
+        ss.sfi -> ss.db "data sends to database"
+        
+        ss.sfr.sfrc -> ss.sfr.sfrs "call service for file"
+        ss.sfr.sfrs -> ss.cleaner_que "sends file"
+        ss.sfr.sfrs -> ss.sfr.sfrr "reads files"
+        ss.sfr.sfrr -> ss.fs "reads files"
+        
+        ss.sfc.sfcc -> ss.sfc.sfcs "call service for file"
+        ss.sfc.sfcs -> ss.index_que "sends file"
+        
+        ss.sfi.sfic -> ss.sfi.sfis "call service for file"
+        ss.sfi.sfis -> ss.sfi.sfir "calls repo"
+        ss.sfi.sfir -> ss.db "send to DB"
+        
+        ss.ssearch.sapi -> ss.ssearch.ss "call service for file"
+        ss.ssearch.ss -> ss.ssearch.sr "calls repo"
+        ss.ssearch.sr -> ss.db "send sql query to DB"
+
+    }
+
+    views {
+        systemContext ss "Diagram1" {
+            include *
+            autolayout lr
+        }
+
+        container ss "Diagram2" {
+            include *
+            autolayout lr
+        }
+
+        component ss.sfr "FileReader" {
+            include *
+            autolayout lr
+        }
+        
+        component ss.sfc "FileCleaner" {
+            include *
+            autolayout lr
+        }
+        
+        component ss.sfi "FileIndexer" {
+            include *
+            autolayout lr
+        }
+        
+        component ss.ssearch "SearatchEngigne" {
+            include *
+            autolayout lr
+        }
+
+     
+        styles {
+            element "Element" {
+                color #ffffff
+            }
+            element "Person" {
+                background #199b65
+                shape person
+            }
+            element "Software System" {
+                background #1eba79
+            }
+            element "Container" {
+                background #23d98d
+            }
+            element "web" {
+                background #eb366c
+            }
+            element "Database" {
+                shape cylinder
+                background #3535e8
+            }
+            element "Bus" {
+                shape Hexagon
+                background #FFA500
+            }
+            element "Component" {
+                background #FF0090
+            }
+        }
+    }
+
+}
