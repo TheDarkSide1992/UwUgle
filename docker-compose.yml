@@ -20,3 +20,16 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=application
       - RABBITMQ_DEFAULT_PASS=pepsi
+
+  apiservice:
+    image: searchengine
+    build:
+      context: .
+      dockerfile: Apps/SearchEngine/Dockerfile
+    ports:
+      - 8000:8000
+      - 8081:8001
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      #- DOTNET_USE_POLLING_FILE_WATCHER=1 #This is only nesesarry for files
+      - ASPNETCORE_URLS=http://+:8000 #Ths allows us to use swagger On the API
