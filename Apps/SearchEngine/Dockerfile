@@ -8,16 +8,20 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
+
+
 #COpy Files From porjects
 COPY ["Apps/SearchEngine/API/API.csproj", "Apps/SearchEngine/API/"]
 COPY ["Apps/SearchEngine/Service/Service.csproj", "Apps/SearchEngine/Service/"]
 COPY ["Apps/SearchEngine/Infrastructure/Infrastructure.csproj", "Apps/SearchEngine/Infrastructure/"]
+COPY ["Packages/SharedModels/SharedModels.csproj", "Packages/SharedModels/"]
 RUN dotnet restore "Apps/SearchEngine/API/API.csproj"
 
 #COpy Files to Docker
 COPY Apps/SearchEngine/API/ Apps/SearchEngine/API/
 COPY Apps/SearchEngine/Service/ Apps/SearchEngine/Service/
 COPY Apps/SearchEngine/Infrastructure/ Apps/SearchEngine/Infrastructure/
+COPY Packages/SharedModels/ Packages/SharedModels/
 
 WORKDIR "Apps/SearchEngine/API"
 RUN dotnet build "API.csproj" -c $BUILD_CONFIGURATION -o /app/build

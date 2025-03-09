@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
+using SharedModels;
 
 namespace API.Controllers;
 
@@ -7,9 +8,9 @@ namespace API.Controllers;
 [Route("[controller]")]
 public class SearchEngineController : ControllerBase
 {
-    private readonly IService<string, string> _service;
+    private readonly IService<DocumentSimple, Document> _service;
 
-    public SearchEngineController(IService<string, string> service)
+    public SearchEngineController(IService<DocumentSimple, Document> service)
     {
         _service = service;
     }
@@ -19,7 +20,7 @@ public class SearchEngineController : ControllerBase
     {
         if (query.Trim() == "") BadRequest();
 
-        IEnumerable<string> result = await _service.QuerySearch(query);
+        IEnumerable<DocumentSimple> result = await _service.QuerySearch(query);
 
         return result.Any() ? Ok(result) : NotFound();
     }
@@ -30,9 +31,9 @@ public class SearchEngineController : ControllerBase
     {
         if (id <= 0) return BadRequest();
 
-        string result = await _service.GetFile(id);
+        Document result = await _service.GetFile(id);
 
-        return result != null ? Ok(result) : NotFound(); 
+        return result.DocumentID <= 0 ? Ok(result) : NotFound(); 
         
     }
 }

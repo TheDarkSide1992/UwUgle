@@ -11,4 +11,12 @@
       <PackageReference Include="Npgsql.DependencyInjection" Version="9.0.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Packages\SharedModels\SharedModels.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Packages\SharedModels\SharedModels.csproj" />
+    </ItemGroup>
+
 </Project>

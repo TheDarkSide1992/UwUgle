@@ -2,6 +2,6 @@
 
 public interface IService<T, TF> where T : class where TF : class
 {
-    Task<IEnumerable<T>> QuerySearch(T query);
+    Task<IEnumerable<T>> QuerySearch(string query);
     Task<TF> GetFile(int id);
 }

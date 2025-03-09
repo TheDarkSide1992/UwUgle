@@ -1,23 +1,25 @@
 ﻿using Infrastructure.Interface;
 using Npgsql;
+using SharedModels;
 
 namespace Infrastructure;
 
-public class SeartchRepositoryString :ISearchRespository<string,string>
+public class SeartchRepositoryDocument : ISearchRespository<DocumentSimple, Document>
 {
     internal readonly NpgsqlDataSource _dataSource;
-    public SeartchRepositoryString(NpgsqlDataSource dataSource) 
+
+    public SeartchRepositoryDocument(NpgsqlDataSource dataSource) 
     {
         _dataSource = dataSource;
 
     }
 
-    public Task<IEnumerable<string>> QuerySearch(string query)
+    public Task<IEnumerable<DocumentSimple>> QuerySearch(string query)
     {
         throw new NotImplementedException();
     }
 
-    public Task<string> GetFile(int id)
+    public Task<Document> GetFile(int id)
     {
         throw new NotImplementedException();
     }
