@@ -16,11 +16,17 @@ public class ServiceDocument : IService<DocumentSimple,Document>
         _searchRepository = searchRepository;
     }
     
+    /**
+     * Handles query and sends requst to repo
+     */
     public Task<IEnumerable<DocumentSimple>> QuerySearch(string query)
     {
         return _searchRepository.QuerySearch(query);
     }
 
+    /**
+     * Handles request for getting dcument and sends it to repo 
+     */
     public Task<Document> GetFile(int id)
     {
         return _searchRepository.GetFile(id);

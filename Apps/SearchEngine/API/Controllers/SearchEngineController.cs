@@ -15,6 +15,9 @@ public class SearchEngineController : ControllerBase
         _service = service;
     }
 
+    /**
+     * Recives Seartch request bassed on Query
+     */
     [HttpGet]
     public async Task<IActionResult> Search([FromQuery] string query)
     {
@@ -25,6 +28,9 @@ public class SearchEngineController : ControllerBase
         return result.Any() ? Ok(result) : NotFound();
     }
 
+    /**
+     * Recives request to retrive document
+     */
     [HttpGet]
     [Route("{id}")]
     public async Task<IActionResult> GetDoc([FromRoute] int id)

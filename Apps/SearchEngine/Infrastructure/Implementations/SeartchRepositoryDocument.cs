@@ -14,11 +14,17 @@ public class SeartchRepositoryDocument : ISearchRespository<DocumentSimple, Docu
 
     }
 
+    /**
+     * query seartches the database based on word (query)
+     */
     public Task<IEnumerable<DocumentSimple>> QuerySearch(string query)
     {
         throw new NotImplementedException();
     }
 
+    /**
+     * Retrives docuement from database
+     */
     public Task<Document> GetFile(int id)
     {
         throw new NotImplementedException();
