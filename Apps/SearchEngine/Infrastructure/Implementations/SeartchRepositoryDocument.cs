@@ -2,20 +2,21 @@
 using Infrastructure.Entities;
 using Infrastructure.Implementations.Mappers;
 using Infrastructure.Interface;
+using Logger;
 using Npgsql;
+using Serilog;
 using SharedModels;
 
 namespace Infrastructure.Implementations;
 
 public class SeartchRepositoryDocument : ISearchRespository<DocumentSimple, Document>
 {
-    private readonly NpgsqlDataSource _dataSource;
-    private readonly FileMapper _mapper;
+    private NpgsqlDataSource _dataSource;
+    private FileMapper _mapper;
     public SeartchRepositoryDocument(NpgsqlDataSource dataSource)
     {
         _mapper = new FileMapper();
         _dataSource = dataSource;
-
     }
 
     /**
@@ -23,6 +24,8 @@ public class SeartchRepositoryDocument : ISearchRespository<DocumentSimple, Docu
      */
     public async Task<IEnumerable<DocumentSimple>> QuerySearch(string query)
     {
+        using var activity = Monitoring.ActivitySource.StartActivity();
+
         var sql = $@"SELECT Files.file_id, Files.file_name, Files.content FROM Files 
                 JOIN Occurrences O on Files.file_id = O.file_id 
                 JOIN Words W on W.word_id = O.word_id 
@@ -40,10 +43,14 @@ public class SeartchRepositoryDocument : ISearchRespository<DocumentSimple, Docu
     }
 
     /**
-     * Retrives docuement from database
+     * Retrives docuement from database based on ID
      */
     public async Task<Document> GetFile(int id)
     {
+        using var activity = Monitoring.ActivitySource.StartActivity();
+
+        Log.Logger.Here().Debug($@"Retrieving document {id} ");
+        
         var sql = $@"SELECT * FROM Files WHERE file_id = @id";
 
         using var conn = _dataSource.OpenConnection();

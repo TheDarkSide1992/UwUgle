@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Interface;
+using Logger;
 using Service.Interfaces;
 using SharedModels;
 
@@ -21,6 +22,8 @@ public class ServiceDocument : IService<DocumentSimple,Document>
      */
     public async Task<IEnumerable<DocumentSimple>> QuerySearch(string query)
     {
+        using var activity = Monitoring.ActivitySource.StartActivity();
+
         return await _searchRepository.QuerySearch(query);
     }
 
@@ -29,6 +32,8 @@ public class ServiceDocument : IService<DocumentSimple,Document>
      */
     public async Task<Document> GetFile(int id)
     {
+        using var activity = Monitoring.ActivitySource.StartActivity();
+
         return await _searchRepository.GetFile(id);
     }
 }

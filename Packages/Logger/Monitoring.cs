@@ -8,12 +8,12 @@ using Serilog.Enrichers.Span;
 
 namespace Logger;
 
-public static class Monitor
+public static class Monitoring
 {
     public static readonly ActivitySource ActivitySource = new("RPS", "1.0.0");
     private static TracerProvider _tracerProvider;
 
-    static Monitor()
+    static Monitoring()
     {
         // Configure tracing
         var serviceName = Assembly.GetExecutingAssembly().GetName().Name;

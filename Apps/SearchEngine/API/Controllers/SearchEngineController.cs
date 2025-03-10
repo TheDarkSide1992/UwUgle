@@ -1,4 +1,6 @@
+using Logger;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using Service.Interfaces;
 using SharedModels;
 
@@ -21,6 +23,8 @@ public class SearchEngineController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Search([FromQuery] string query)
     {
+        using var activity = Monitoring.ActivitySource.StartActivity();
+        
         if (query.Trim() == "") BadRequest();
 
         IEnumerable<DocumentSimple> result = await _service.QuerySearch(query);
@@ -35,8 +39,12 @@ public class SearchEngineController : ControllerBase
     [Route("{id}")]
     public async Task<IActionResult> GetDoc([FromRoute] int id)
     {
+        using var activity = Monitoring.ActivitySource.StartActivity();
+
         if (id <= 0) return BadRequest();
 
+        Log.Logger.Here().Debug($@"Attempting to retrieve document {id} ");
+        
         Document result = await _service.GetFile(id);
 
         return result.DocumentID <= 0 ? Ok(result) : NotFound(); 
