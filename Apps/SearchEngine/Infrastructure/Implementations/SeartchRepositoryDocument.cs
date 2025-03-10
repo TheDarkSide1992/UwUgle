@@ -38,7 +38,7 @@ public class SeartchRepositoryDocument : ISearchRespository<DocumentSimple, Docu
             query = query
         });
 
-        return list.Select(entity => _mapper.FromEntityToDocumentSimple(entity));
+        return list.Select(entity => _mapper.FromEntityToDocumentSimple(entity)); //Maos entity element in list to DocumentSImple
         
     }
 
