@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Interface;
 using Npgsql;
 
-namespace Infrastructure;
+namespace Infrastructure.Implementations;
 
 public class SeartchRepositoryString :ISearchRespository<string,string>
 {

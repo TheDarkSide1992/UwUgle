@@ -19,16 +19,16 @@ public class ServiceDocument : IService<DocumentSimple,Document>
     /**
      * Handles query and sends requst to repo
      */
-    public Task<IEnumerable<DocumentSimple>> QuerySearch(string query)
+    public async Task<IEnumerable<DocumentSimple>> QuerySearch(string query)
     {
-        return _searchRepository.QuerySearch(query);
+        return await _searchRepository.QuerySearch(query);
     }
 
     /**
      * Handles request for getting dcument and sends it to repo 
      */
-    public Task<Document> GetFile(int id)
+    public async Task<Document> GetFile(int id)
     {
-        return _searchRepository.GetFile(id);
+        return await _searchRepository.GetFile(id);
     }
 }
