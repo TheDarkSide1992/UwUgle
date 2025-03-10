@@ -1,11 +1,23 @@
+using Infrastructure;
+using Infrastructure.Interface;
+using Service.Implementations;
+using Service.Interfaces;
+using SharedModels;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
 builder.Services.AddNpgsqlDataSource(Environment.GetEnvironmentVariable("pgconn")!,
     dataSourceBuilder => dataSourceBuilder.EnableParameterLogging());
+
+builder.Services.AddScoped<ISearchRespository<DocumentSimple, Document>, SeartchRepositoryDocument>();
+builder.Services.AddScoped<IService<DocumentSimple, Document>, ServiceDocument>();
+
+builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 

@@ -1,10 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{773BC29C-D8AD-489C-ADCD-F7BBCD2AB97F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{6BD42CA9-1561-4FE3-B560-AEF237084700}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{35D8D41B-9F33-476D-8EA1-3CC99FA98D02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedModels", "..\..\Packages\SharedModels\SharedModels.csproj", "{01D96677-84B4-4E32-A5E4-6F46D32B1862}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +27,9 @@ Global
 		{35D8D41B-9F33-476D-8EA1-3CC99FA98D02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35D8D41B-9F33-476D-8EA1-3CC99FA98D02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35D8D41B-9F33-476D-8EA1-3CC99FA98D02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01D96677-84B4-4E32-A5E4-6F46D32B1862}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01D96677-84B4-4E32-A5E4-6F46D32B1862}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01D96677-84B4-4E32-A5E4-6F46D32B1862}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01D96677-84B4-4E32-A5E4-6F46D32B1862}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
