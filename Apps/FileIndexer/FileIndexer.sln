@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{F237BEB2-7045-48F8-BA3A-9F14060F3AA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "..\..\Packages\Logger\Logger.csproj", "{6AEDD24F-71DD-4530-95B2-F2A006395B82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedModels", "..\..\Packages\SharedModels\SharedModels.csproj", "{173292C7-E881-4D24-BB59-A306A8884D8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{F237BEB2-7045-48F8-BA3A-9F14060F3AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F237BEB2-7045-48F8-BA3A-9F14060F3AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F237BEB2-7045-48F8-BA3A-9F14060F3AA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AEDD24F-71DD-4530-95B2-F2A006395B82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AEDD24F-71DD-4530-95B2-F2A006395B82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AEDD24F-71DD-4530-95B2-F2A006395B82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AEDD24F-71DD-4530-95B2-F2A006395B82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{173292C7-E881-4D24-BB59-A306A8884D8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{173292C7-E881-4D24-BB59-A306A8884D8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{173292C7-E881-4D24-BB59-A306A8884D8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{173292C7-E881-4D24-BB59-A306A8884D8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
