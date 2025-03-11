@@ -15,10 +15,10 @@ SQL_FOLDER="/SQL/PostgresSQL"
 export PGPASSWORD="$DB_PASSWORD"
 
 # Run specific SQL files
-echo "🪄️ Setting PostgresSQL tables"
+echo "🪄️ Setting PostgresSQL tables" # sets up tables
 psql -U "$DB_USER" -d "$DB_NAME" -f "$SQL_FOLDER/Create.sql"
 
-echo "🪄️ Setting PostgresSQL Mock Data"
+echo "🪄️ Setting PostgresSQL Mock Data" #Runs Moc Set up. #remowe before publish
 psql -U "$DB_USER" -d "$DB_NAME" -f "$SQL_FOLDER/MockData.sql"
 
 echo "✅ Database setup complete!"

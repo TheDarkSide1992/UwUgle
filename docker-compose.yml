@@ -44,8 +44,8 @@ services:
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./SQL:/SQL
-      - ./scripts/sql-set-up.sh:/docker-entrypoint-initdb.d/sql-set-up.sh
+      - ./SQL:/SQL #Maops sql folder
+      - ./scripts/sql-set-up.sh:/docker-entrypoint-initdb.d/sql-set-up.sh #runs initialisation scrips if  database doss sent exist
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
