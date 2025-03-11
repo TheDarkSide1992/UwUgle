@@ -3,7 +3,6 @@ set -e  # Stop the script on any error
 
 echo "♦️ Setting Up database"
 
-echo "🔮️ Setting Up database"
 # PostgreSQL connection details
 DB_USER="postgres"
 POSTGRES_PASSWORD="postgres"
@@ -18,7 +17,7 @@ export PGPASSWORD="$DB_PASSWORD"
 echo "🪄️ Setting PostgresSQL tables" # sets up tables
 psql -U "$DB_USER" -d "$DB_NAME" -f "$SQL_FOLDER/Create.sql"
 
-echo "🪄️ Setting PostgresSQL Mock Data" #Runs Moc Set up. #remowe before publish
+echo "🪄️ Setting PostgresSQL Mock Data" #Runs Moc Set up. #remove before publish
 psql -U "$DB_USER" -d "$DB_NAME" -f "$SQL_FOLDER/MockData.sql"
 
 echo "✅ Database setup complete!"
