@@ -44,6 +44,8 @@ services:
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./SQL:/SQL
+      - ./scripts/sql-set-up.sh:/docker-entrypoint-initdb.d/sql-set-up.sh
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
@@ -51,5 +53,6 @@ services:
       #remember to make this environmental secrets /|\
       #secret looks like this:
       #Host=localhost\;Database=UwUgleDB\;User Id=postgres\;Password=postgres\;Port=5001
+
 volumes:
   pgdata:
