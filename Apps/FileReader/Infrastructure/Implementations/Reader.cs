@@ -14,6 +14,7 @@ public class Reader : IReader
     public Reader(string connectionString = "host=localhost;username=guest;password=guest")
     {
         _bus = RabbitHutch.CreateBus(connectionString);
+        _bus.PubSub.Subscribe<FilesModel>("Files", async (message) => Console.WriteLine(message));
     }
     
     
@@ -56,7 +57,11 @@ public async Task ReadFoldersSequentiallyWithParallelFilesAsBytes(string rootFol
         {
             byte[] content = File.ReadAllBytes(filePath);
             fileContents[Path.GetFileName(filePath)] = content;
-            _bus.PubSub.PublishAsync(new FilesModel().fileContents = content);
+            FilesModel readFile = new FilesModel
+            {
+                fileContents = content
+            };
+            _bus.PubSub.PublishAsync(readFile);
             //channel.BasicPublishAsync(exchange: string.Empty, routingKey: "Files", body: content);
         });
 
