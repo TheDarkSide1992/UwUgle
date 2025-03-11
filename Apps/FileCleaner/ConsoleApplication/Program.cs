@@ -2,9 +2,14 @@
 
 using Service;
 using Service.Implementations;
+using Service.Implementations.converter;
 
-Console.WriteLine("Hello, World!");
+CleanerStringSpacing cleaner = new CleanerStringSpacing();
+ByteArrayConverter converter = new ByteArrayConverter();
 
-CleanerService cs = new CleanerService(new CleanerString());
-cs.start();
+CleanerService cs = new CleanerService(cleaner, converter);
+
+await cs.Start();
+
+
 
