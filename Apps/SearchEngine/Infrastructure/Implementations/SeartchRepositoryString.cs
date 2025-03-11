@@ -1,11 +1,11 @@
 ﻿using Infrastructure.Interface;
 using Npgsql;
 
-namespace Infrastructure;
+namespace Infrastructure.Implementations;
 
 public class SeartchRepositoryString :ISearchRespository<string,string>
 {
-    internal readonly NpgsqlDataSource _dataSource;
+    private readonly NpgsqlDataSource _dataSource;
     public SeartchRepositoryString(NpgsqlDataSource dataSource) 
     {
         _dataSource = dataSource;

@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Packages\Logger\Logger.csproj" />
       <ProjectReference Include="..\Service\Service.csproj" />
     </ItemGroup>
 
