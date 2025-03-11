@@ -4,20 +4,18 @@ namespace Service.Implementations;
 
 public class CleanerString : ICleaner<string>
 {
+    /**
+     * Cleans message by finding X- lines
+     */
     public async Task<string> Clean(string message)
     {
-        var header = new Char[] { ' ', '*', '.' };
+        if (message.Trim() == "") return "";
 
-        string input = "lala.bla";
         message = message.Split("X-").Last();
         int endHeader = message.IndexOf("\n", StringComparison.Ordinal);
         
         message = message.Remove(0, endHeader);
 
-
-        //Console.WriteLine(message.Trim( header ));
-        
-
-        return message;
+        return message.TrimStart();
     }
 }
