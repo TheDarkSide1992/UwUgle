@@ -25,7 +25,7 @@ public class CleanerStringSpacing: ICleaner<string>
         }
         catch (Exception ex)
         {
-         Log.Logger.Error("Error while cleaning file");   
+         Log.Logger.Error("Error while cleaning file");
         }
         return null;
     }
