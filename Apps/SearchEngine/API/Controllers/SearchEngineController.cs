@@ -47,7 +47,7 @@ public class SearchEngineController : ControllerBase
         
         Document result = await _service.GetFile(id);
 
-        return result.DocumentID <= 0 ? Ok(result) : NotFound(); 
+        return result.DocumentID <= 0 ? NotFound() : Ok(result); 
         
     }
 }
