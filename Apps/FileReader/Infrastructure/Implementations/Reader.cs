@@ -1,9 +1,9 @@
 ﻿using System.Collections.Concurrent;
-using System.Text;
 using EasyNetQ;
 using EasyNetQ.Topology;
 using Infrastructure.Interfaces;
-using Infrastructure.Models;
+using Logger;
+using Serilog;
 
 namespace Infrastructure.Implementations;
 
@@ -12,7 +12,9 @@ public class Reader : IReader
     
     private readonly IBus _bus;
     private readonly string _queueName = "Files";
-
+    /*consider testing prefetchcount a bit to see if we can speed file transfer up a bit,
+     50 is default. Higher values gives better performance but requires more memory
+     */
     private readonly string connectionString =
         "host=localhost;username=guest;password=guest;timeout=30;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5";
     public Reader()
@@ -31,29 +33,27 @@ public async Task ReadFoldersSequentiallyWithParallelFilesAsBytes(string rootFol
 {
     
     /*
-     Speed:
-     Total execution time: 548667 ms
+     Speed: For Emil's Laptop
+     Total execution time: 548667(~610000 with rabbitmq implemented) ms
      Total folders processed: 3499
      */
-    var result = new Dictionary<string, ConcurrentDictionary<string, byte[]>>();
 
     // Get all folders, including subfolders
     var allFolders = Directory.GetDirectories(rootFolderPath, "*", SearchOption.AllDirectories);
-
+    
+    Log.Logger.Here().Debug($@"Attempting to retrieve read files from {rootFolderPath}");
+    
     foreach (var folder in allFolders)
     {
         Console.WriteLine($"Processing folder: {folder}");
-
-        var fileContents = new ConcurrentDictionary<string, byte[]>();
+        
         var files = Directory.GetFiles(folder);
 
         Parallel.ForEach(files, filePath =>
         {
             byte[] content = File.ReadAllBytes(filePath);
-            fileContents[Path.GetFileName(filePath)] = content;
             
             var properties = new MessageProperties { DeliveryMode = 2 }; // Persistent message
-
             _bus.Advanced.PublishAsync(Exchange.Default, _queueName, false, properties, content);
         });
     }
@@ -67,7 +67,7 @@ public async Task ReadFoldersSequentiallyWithParallelFilesAsBytes(string rootFol
 public Dictionary<string, ConcurrentDictionary<string, byte[]>> ReadFolderFilesAsByteArray(string rootFolderPath)
 {
     /*
-     Speed:
+     Speed: For Emil's Laptop
      Total execution time: 3328948 ms
      Total folders processed: 3499
      */
