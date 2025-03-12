@@ -1,21 +1,26 @@
 ﻿using System.Collections.Concurrent;
 using System.Text;
 using EasyNetQ;
+using EasyNetQ.Topology;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
-using RabbitMQ.Client;
 
 namespace Infrastructure.Implementations;
 
 public class Reader : IReader
 {
-    private readonly IBus _bus;
     
-    public Reader(string connectionString = "host=localhost;username=guest;password=guest")
+    private readonly IBus _bus;
+    private readonly string _queueName = "Files";
+
+    private readonly string connectionString =
+        "host=localhost;username=guest;password=guest;timeout=30;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5";
+    public Reader()
     {
         _bus = RabbitHutch.CreateBus(connectionString);
-        _bus.PubSub.Subscribe<FilesModel>("Files", async (message) => Console.WriteLine(message));
+        _bus.Advanced.QueueDeclareAsync(name: _queueName);
     }
+    
     
     
 /**
@@ -24,17 +29,6 @@ public class Reader : IReader
  */
 public async Task ReadFoldersSequentiallyWithParallelFilesAsBytes(string rootFolderPath)
 {
-    /*
-    var factory = new ConnectionFactory { HostName = "localhost" };
-    var connection = await factory.CreateConnectionAsync();
-    var channel = await connection.CreateChannelAsync();
-
-    await channel.QueueDeclareAsync(queue: "Files", durable: false, exclusive: false, autoDelete: false,
-        arguments: null);
-    */
-
-    
-    
     
     /*
      Speed:
@@ -57,15 +51,11 @@ public async Task ReadFoldersSequentiallyWithParallelFilesAsBytes(string rootFol
         {
             byte[] content = File.ReadAllBytes(filePath);
             fileContents[Path.GetFileName(filePath)] = content;
-            FilesModel readFile = new FilesModel
-            {
-                fileContents = content
-            };
-            _bus.PubSub.PublishAsync(readFile);
-            //channel.BasicPublishAsync(exchange: string.Empty, routingKey: "Files", body: content);
-        });
+            
+            var properties = new MessageProperties { DeliveryMode = 2 }; // Persistent message
 
-        result[folder] = fileContents;
+            _bus.Advanced.PublishAsync(Exchange.Default, _queueName, false, properties, content);
+        });
     }
 }
 
