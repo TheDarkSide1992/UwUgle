@@ -17,8 +17,10 @@ body {
   }
 
   input {
-    background-color: #ffffff;
+    background-color: #dcdcdc;
     color: #000000;
+    border: none;
+    outline: none;
   }
 }
 
@@ -27,12 +29,13 @@ body {
   body {
     background-color: #252525;
     color: #ffffff;
-
-    input {
-      background-color: #5e5e5e;
-      color: #ffffff;
-      border: none;
-      outline: none;
-    }
   }
+
+  input {
+    background-color: #5e5e5e;
+    color: #ffffff;
+    border: none;
+    outline: none;
+  }
+
 }
