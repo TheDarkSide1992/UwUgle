@@ -11,7 +11,7 @@ public class Reader : IReader
 {
     
     private readonly IBus _bus;
-    private readonly string _queueName = "Files";
+    private readonly string _queueName = "FilesV5";
     /*consider testing prefetchcount a bit to see if we can speed file transfer up a bit,
      50 is default. Higher values gives better performance but requires more memory
      */
@@ -41,7 +41,7 @@ public async Task ReadFoldersSequentiallyWithParallelFilesAsBytes(string rootFol
     // Get all folders, including subfolders
     var allFolders = Directory.GetDirectories(rootFolderPath, "*", SearchOption.AllDirectories);
     
-    Log.Logger.Here().Debug($@"Attempting to retrieve read files from {rootFolderPath}");
+    Log.Logger.Here().Debug($@"Attempting to retrieve files from {rootFolderPath}");
     
     foreach (var folder in allFolders)
     {
@@ -57,7 +57,29 @@ public async Task ReadFoldersSequentiallyWithParallelFilesAsBytes(string rootFol
             _bus.Advanced.PublishAsync(Exchange.Default, _queueName, false, properties, content);
         });
     }
+    
+    /*
+     this dosnt seems to send the messages to rabbitmq, but it still runs trough all the files
+    Parallel.ForEach(allFolders, folder =>
+    {
+        Console.WriteLine($"Processing folder: {folder}");
+
+        var files = Directory.GetFiles(folder);
+
+        foreach (var filePath in files) 
+        {
+            byte[] content = File.ReadAllBytes(filePath);
+
+            var properties = new MessageProperties { DeliveryMode = 2 }; // Persistent message
+            _bus.Advanced.PublishAsync(Exchange.Default, _queueName, false, properties, content);
+        }
+    });*/
+    
+    
+    
 }
+
+
 
 
 
