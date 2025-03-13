@@ -1,4 +1,4 @@
-﻿namespace Events;
+﻿namespace Events.EventModels;
 
 public class CleanedEvent : BaseEventModel
 {
