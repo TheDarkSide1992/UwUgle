@@ -4,8 +4,8 @@ namespace Infrastructure.Interfaces;
 
 public interface IReader
 {
-    Dictionary<string, ConcurrentDictionary<string, byte[]>> ReadFolderFilesAsByteArray(string rootFolderPath);
-
-    Task ReadFoldersSequentiallyWithParallelFilesAsBytes(
-        string rootFolderPath);
+    string[] GetFilesPathFromFolder(string folderPath);
+    byte[] ReadFileAsByteArray(string filepath);
+    string[] GetFoldersPath(string rootFolderPath);
+    
 }
