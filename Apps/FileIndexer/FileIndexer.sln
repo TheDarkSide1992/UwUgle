@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "..\..\Packages\Lo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedModels", "..\..\Packages\SharedModels\SharedModels.csproj", "{173292C7-E881-4D24-BB59-A306A8884D8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Events", "..\..\Packages\Events\Events.csproj", "{7F46C4AD-70CE-499C-9FFA-C56EE61B7297}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{173292C7-E881-4D24-BB59-A306A8884D8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{173292C7-E881-4D24-BB59-A306A8884D8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{173292C7-E881-4D24-BB59-A306A8884D8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F46C4AD-70CE-499C-9FFA-C56EE61B7297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F46C4AD-70CE-499C-9FFA-C56EE61B7297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F46C4AD-70CE-499C-9FFA-C56EE61B7297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F46C4AD-70CE-499C-9FFA-C56EE61B7297}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
