@@ -1,4 +1,5 @@
-﻿using Service.Interfaces;
+﻿using Events.EventModels;
+using Service.Interfaces;
 
 namespace Service;
 
@@ -28,7 +29,7 @@ public class CleanerService
     /**
      * Gets the message and returns as a string
      */
-    private async Task<string> GetMessage()
+    public async Task<string> GetMessage()
     {
         //TODO INsert rabitmq result here
         //var str = await _converter.From(message);
@@ -39,9 +40,9 @@ public class CleanerService
     /**
      * sends the message returns void
      */
-    private async void SendBytes(string message)
+    public async Task<CleanedEvent> SendBytes(string message)
     {
-        //TODO Send over rabit MQ
         var bytearr = await _converter.To(message);
+        return new CleanedEvent { CleanMessage = bytearr};
     }
 }

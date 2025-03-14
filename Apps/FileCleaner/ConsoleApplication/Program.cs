@@ -1,15 +1,19 @@
-﻿// See https://aka.ms/new-console-template for more information
-
+﻿using Events;
+using Polly;
+using Serilog;
 using Service;
 using Service.Implementations;
 using Service.Implementations.converter;
 
-CleanerStringSpacing cleaner = new CleanerStringSpacing();
-ByteArrayConverter converter = new ByteArrayConverter();
+public static class Program
+{
+    public static async Task Main()
+    {
+        
+        Log.Logger.Error("testing log");
+    }
+}
 
-CleanerService cs = new CleanerService(cleaner, converter);
-
-await cs.Start();
 
 
 

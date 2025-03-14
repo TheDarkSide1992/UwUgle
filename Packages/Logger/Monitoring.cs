@@ -12,6 +12,7 @@ public static class Monitoring
 {
     public static readonly ActivitySource ActivitySource = new("RPS", "1.0.0");
     private static TracerProvider _tracerProvider;
+    public static ILogger Logger = Log.Logger;
 
     static Monitoring()
     {
@@ -30,7 +31,6 @@ public static class Monitoring
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .Enrich.WithSpan()
-            .WriteTo.Seq("http://localhost:5341")
             .WriteTo.Console()
             .CreateLogger();
     }
