@@ -1,3 +1,4 @@
+using Events;
 namespace DefaultNamespace;
 
 public class RawEvent : BaseEventModel

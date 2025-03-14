@@ -1,9 +1,13 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Diagnostics;
+using DefaultNamespace;
 using EasyNetQ;
 using EasyNetQ.Topology;
-using Infrastructure;
 using Infrastructure.Implementations;
 using Infrastructure.Interfaces;
+using Logger;
+using OpenTelemetry;
+using OpenTelemetry.Context.Propagation;
+using Serilog;
 using Service.Interfaces;
 
 namespace Service.Implementations;
@@ -46,6 +50,21 @@ public class ReaderService : IService
     
     public async Task ReadFoldersSequentiallyWithParallelFilesAsBytes(string rootFolderPath)
     {
+        using var activity = Monitoring.ActivitySource.StartActivity();
+        Log.Logger.Here().Debug($@"Attempting to retrieve files from {rootFolderPath}");
+
+        var request = new RawEvent();
+        
+        var activityContext = activity?.Context ?? Activity.Current?.Context ?? default;
+        var propagationContext = new PropagationContext(activityContext, Baggage.Current);
+        var propagator = new TraceContextPropagator();
+        propagator.Inject(propagationContext, request, (r, key, value) =>
+        {
+            r.Headers.Add(key, value);
+        });
+        
+        
+        
         string[] allFolders = _reader.GetFoldersPath(rootFolderPath);
         
         for (int i = 0; i < allFolders.Length; i++) 
