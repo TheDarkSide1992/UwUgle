@@ -1,4 +1,7 @@
-﻿using Events.EventModels;
+﻿using System.Diagnostics;
+using Events.EventModels;
+using Logger;
+using Serilog;
 using Service.Interfaces;
 
 namespace Service;
@@ -17,32 +20,21 @@ public class CleanerService
     /**
      * starts the proces to clean messages
      */
-    public async Task Start()
+    public async Task<Byte[]> Clean(string text)
     {
-        string msg = await GetMessage();
-        var msg2 = await _cleaner.Clean(msg);
-        Console.WriteLine(msg2);
-        
-        SendBytes(msg2);
-    }
+        using var activity = Monitoring.ActivitySource.StartActivity();
+        try
+        {
+            var cleantext = _cleaner.Clean(text).Result;
+            var cleanedTextAsBytes = _converter.To(cleantext);
+            return await cleanedTextAsBytes;
+        }
+        catch (Exception e)
+        {
+            Log.Logger.Error("Error while cleaning file");
+        }
 
-    /**
-     * Gets the message and returns as a string
-     */
-    public async Task<string> GetMessage()
-    {
-        //TODO INsert rabitmq result here
-        //var str = await _converter.From(message);
-        
-        return "";
+        return null;
     }
-
-    /**
-     * sends the message returns void
-     */
-    public async Task<CleanedEvent> SendBytes(string message)
-    {
-        var bytearr = await _converter.To(message);
-        return new CleanedEvent { CleanMessage = bytearr};
-    }
+    
 }
