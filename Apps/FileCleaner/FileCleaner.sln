@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication", "Conso
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{EA5FB8F3-84EB-45BE-8BA4-021C70017E48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "..\..\Packages\Logger\Logger.csproj", "{AC6E2899-F4A7-4386-9D2B-E958F4B4F2E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Events", "..\..\Packages\Events\Events.csproj", "{4A3556C8-6D0D-4217-B7BE-0EB882752915}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{EA5FB8F3-84EB-45BE-8BA4-021C70017E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA5FB8F3-84EB-45BE-8BA4-021C70017E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA5FB8F3-84EB-45BE-8BA4-021C70017E48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC6E2899-F4A7-4386-9D2B-E958F4B4F2E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC6E2899-F4A7-4386-9D2B-E958F4B4F2E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC6E2899-F4A7-4386-9D2B-E958F4B4F2E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC6E2899-F4A7-4386-9D2B-E958F4B4F2E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A3556C8-6D0D-4217-B7BE-0EB882752915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A3556C8-6D0D-4217-B7BE-0EB882752915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A3556C8-6D0D-4217-B7BE-0EB882752915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A3556C8-6D0D-4217-B7BE-0EB882752915}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

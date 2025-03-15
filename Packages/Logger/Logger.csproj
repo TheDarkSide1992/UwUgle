@@ -17,9 +17,4 @@
     <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.1" />
     <PackageReference Include="SerilogMetrics" Version="2.1.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Events\Events.csproj" />
-  </ItemGroup>
-  
 </Project>

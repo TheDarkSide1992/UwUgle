@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Packages\Events\Events.csproj" />
+      <ProjectReference Include="..\..\..\Packages\Logger\Logger.csproj" />
+    </ItemGroup>
+
 </Project>
