@@ -38,7 +38,9 @@ public class Program
         }
     }
 
-
+   /**
+   * Handles the getting messages from mq
+   */
     public static async Task handleMessages()
     {
         var service = new IndexService();
@@ -46,11 +48,13 @@ public class Program
         using var bus = RabbitMqConnectionHelper.GetRabbitMQConnection();
         while (!connectionEstablished)
         {
+           // uses the policy variable to isolate the service from faults in the mq
             policy.ExecuteAsync(async () =>
             {
-                {
+                     // subscribes to a topic on the mq
                     var subscriptionResult = bus.PubSub.SubscribeAsync<CleanedEvent>("Cleaned", async e =>
                     {
+                       // setting up the tracing to make destributed tracing possible
                         var propagator = new TraceContextPropagator();
                         var parentContext = propagator.Extract(default, e, (msg, key) =>
                         {
@@ -60,10 +64,11 @@ public class Program
                         Baggage.Current = parentContext.Baggage;
                         using var activity = Monitoring.ActivitySource.StartActivity("Message Received",
                             ActivityKind.Consumer, parentContext.ActivityContext);
-                        
+
+                       // starts an index activity
                         using var indexActivity = Monitoring.ActivitySource.StartActivity();
                         
-                        var indexStatus = await service.Index(e.CleanMessage);
+                        var indexStatus = await service.Index(e.CleanMessage); // returns true if index was sucessful false if index failed
                         if (indexStatus)
                         {
                           Log.Logger.Information("Index of file completed");   
@@ -74,7 +79,7 @@ public class Program
                         }
                         
                     }).AsTask();
-
+                  // awaits the result of the subscriptionResult variable and puts the thread to sleep for a secound
                     await subscriptionResult.WaitAsync(CancellationToken.None);
                     connectionEstablished = subscriptionResult.Status == TaskStatus.RanToCompletion;
                     if (!connectionEstablished) Thread.Sleep(1000);
