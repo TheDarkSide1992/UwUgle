@@ -27,7 +27,7 @@
       <div *ngIf="documentSearchResults.length > 0" class="suggestions" style="flex-direction: column">
         <div
           *ngFor="let suggestion of documentSearchResults"
-          (click)="getDocuement(suggestion.DocumentID)"
+          (click)="getDocuement(suggestion.documentID)"
           class="suggestion-item">
           {{ suggestion.documentName }}
         </div>

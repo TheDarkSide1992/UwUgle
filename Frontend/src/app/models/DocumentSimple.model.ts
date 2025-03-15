@@ -1,4 +1,4 @@
 export interface DocumentSimple {
-  DocumentID : string;
+  documentID : number;
   documentName : string;
 }
