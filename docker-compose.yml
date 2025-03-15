@@ -58,6 +58,22 @@ services:
     environment:
       - rabbitmq_connection=host=rmq;username=application;password=pepsi;timeout=5;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5
   
+  fileindexer:
+    image: fileindexer
+    build:
+      context: .
+      dockerfile: Apps/FileIndexer/Dockerfile
+    deploy:
+      mode: replicated
+      replicas: 3
+    depends_on:
+      rmq:
+        condition: service_healthy
+    environment:
+      - rabbitmq_connection=host=rmq;username=application;password=pepsi;timeout=5;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5
+      - pgconn=Host=database;Database=UwUgleDB;User Id=postgres;Password=postgres;Port=5432
+      
+  
   database:
     image: postgres
     ports:

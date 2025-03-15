@@ -9,6 +9,7 @@ COPY ["Apps/FileIndexer/ConsoleApplication/ConsoleApplication.csproj", "Apps/Fil
 COPY ["Apps/FileIndexer/Service/Service.csproj", "Apps/FileIndexer/Service/"]
 COPY ["Apps/FileIndexer/Infrastructure/Infrastructure.csproj", "Apps/FileIndexer/Infrastructure/"]
 COPY ["Packages/SharedModels/SharedModels.csproj", "Packages/SharedModels/"]
+COPY ["Packages/Events/Events.csproj", "Packages/Events/"]
 COPY ["Packages/Logger/Logger.csproj", "Packages/Logger/"]
 RUN dotnet restore "Apps/FileIndexer/ConsoleApplication/ConsoleApplication.csproj"
 
@@ -16,7 +17,8 @@ COPY Apps/FileIndexer/ConsoleApplication/ Apps/FileIndexer/ConsoleApplication/
 COPY Apps/FileIndexer/Service/ Apps/FileIndexer/Service/
 COPY Apps/FileIndexer/Infrastructure/ Apps/FileIndexer/Infrastructure/
 COPY Packages/SharedModels/ Packages/SharedModels/
-COPY Packages/Logger/Logger Packages/Logger/
+COPY Packages/Events/ Packages/Events/
+COPY Packages/Logger/ Packages/Logger/
 
 WORKDIR "Apps/FileIndexer/ConsoleApplication"
 RUN dotnet build "ConsoleApplication.csproj" -c $BUILD_CONFIGURATION -o /app/build
