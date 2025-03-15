@@ -10,7 +10,7 @@
 <body>
 
 <div style=" justify-content: center; margin-top: 15%; margin-bottom: 15%;">
-  <div class="columns" >
+  <div class="columns">
     <div class="rows" style="justify-content: center; scale: 500%; margin-bottom: 50%">
       <h1 style="color: dodgerblue">U</h1>
       <h1 style="color: red">w</h1>
@@ -22,10 +22,18 @@
     <!--<h1>UwUgle</h1>-->
     <br>
     <div class="rows" style="scale: 275%">
-        <input type="text" id="query" placeholder="search here"/>
+      <input type="text" id="query" placeholder="search here" [(ngModel)]="query"
+             (ngModelChange)="searchDocuments(query)"/>
+      <div *ngIf="documentSearchResults.length > 0" class="suggestions" style="flex-direction: column">
+        <div
+          *ngFor="let suggestion of documentSearchResults"
+          (click)="getDocuement(suggestion.DocumentID)"
+          class="suggestion-item">
+          {{ suggestion.DocumentName }}
+        </div>
+      </div>
     </div>
     <br>
-    <p>Seartch result</p>
   </div>
 </div>
 
