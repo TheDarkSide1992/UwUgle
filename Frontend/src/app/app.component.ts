@@ -21,7 +21,7 @@ export class AppComponent {
   constructor(private http: HttpClient) {
   }
 
-  async getDocuement(DocumentID: string) {
+  async getDocuement(DocumentID: number) {
     console.log(DocumentID);
   }
 

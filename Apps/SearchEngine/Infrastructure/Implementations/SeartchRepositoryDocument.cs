@@ -29,13 +29,13 @@ public class SeartchRepositoryDocument : ISearchRespository<DocumentSimple, Docu
         var sql = $@"SELECT Files.file_id, Files.file_name, Files.content FROM Files 
                 JOIN Occurrences O on Files.file_id = O.file_id 
                 JOIN Words W on W.word_id = O.word_id 
-                WHERE word LIKE @query;
+                WHERE word ILIKE @query;
                 ";
 
         using var conn = _dataSource.OpenConnection();
         
         var list = await conn.QueryAsync<DocumentEntity>(sql, new {
-            query = query
+            query = @$"%{query}%"
         });
 
         return list.Select(entity => _mapper.FromEntityToDocumentSimple(entity)); //Maps entity element in list to DocumentSImple
