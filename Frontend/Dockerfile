@@ -1,24 +1,18 @@
 # Stage 1: Build the Angular application
-FROM node:18-alpine AS build
+FROM node:latest AS build
 
-WORKDIR /app
+WORKDIR /dist/src/app
 
-COPY package*.json ./
-
-RUN npm install
+RUN npm cache clean --force
 
 COPY . .
+RUN npm install
+RUN npm run build --prod
 
-RUN npm run build --production
 
-# Stage 2: Serve the built application with nginx
-FROM nginx:alpine
+FROM nginx:latest AS ngi
 
-COPY --from=build /app/dist/frontend /usr/share/nginx/html
-
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-# Copy the nginx configuration file
+COPY --from=build /dist/src/app/dist/ /usr/share/nginx/html
+COPY /nginx.conf  /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
