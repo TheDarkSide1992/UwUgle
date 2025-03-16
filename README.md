@@ -1,3 +1,6 @@
+
+<img src="./Frontend/public/favicon.ico" width="50%" height="50%">
+
 # UwUgle
 ### DEVS
 * Jens
