@@ -8,8 +8,7 @@ public static class Program {
 
     public static async Task Main()
     {
-        IService _service;
-        _service = new ReaderService(new Reader());
+        IService _service = new ReaderService(new Reader());
 
         // should contain 517.401 Files, 3.499 Folders
         string rootFolderPath = Environment.GetEnvironmentVariable("file_folder");
