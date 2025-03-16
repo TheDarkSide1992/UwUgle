@@ -11,7 +11,7 @@ DB_NAME="UwUgleDB"
 # Path to SQL folder
 SQL_FOLDER="/SQL/PostgresSQL"
 
-export PGPASSWORD="$DB_PASSWORD"
+export PGPASSWORD="POSTGRES_PASSWORD"
 
 # Run specific SQL files
 echo "🪄️ Setting PostgresSQL tables" # sets up tables
