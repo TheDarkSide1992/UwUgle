@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using DefaultNamespace;
 using EasyNetQ;
 using EasyNetQ.Topology;
@@ -20,12 +21,16 @@ public class ReaderService : IService
     
     private readonly IBus _bus;
     private readonly string _queueName = "Files";
-    
+    private readonly ConcurrentQueue<RawEvent> _failedMessages = new();
+    private readonly SemaphoreSlim _retryLock = new(1, 1); // Prevents multiple retries at once
+
     public ReaderService(Reader reader)
     {
         
         _reader = reader;
         _bus = RabbitMqConnectionHelper.GetRabbitMQConnection();
+        
+        //ensures that a queue with the give name exists in the broker, if it exists this does nothing.
         _bus.Advanced.QueueDeclareAsync(name: _queueName).ContinueWith(task =>
         {
             if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
@@ -43,7 +48,9 @@ public class ReaderService : IService
         });
     }
     
-    
+    /**
+     * loops through a given folder and reads all files in it and publishes them.
+     */
     public async Task ReadFoldersSequentiallyWithParallelFilesAsBytes(string rootFolderPath)
     {
         try
@@ -79,9 +86,11 @@ public class ReaderService : IService
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Failed to process file {filePath}: {ex.Message}");
+                            Console.WriteLine($"Failed to send file {filePath}: {ex.Message}");
+                            _failedMessages.Enqueue(new RawEvent { RawMessage = _reader.ReadFileAsByteArray(filePath) });
                         }
                     });
+                await EnsureAllFailedMessagesAreSent();
             }
             Thread.Sleep(1500);
         }
@@ -92,6 +101,10 @@ public class ReaderService : IService
         
     }
     
+    
+    /**
+     * publishes a message asynchronously to the rabbitmq broker, throws and exception if publish fails
+     */
     private async Task PubByteArrayAsync(RawEvent content)
     {
         MessageProperties properties = new MessageProperties { DeliveryMode = 2 };
@@ -100,11 +113,46 @@ public class ReaderService : IService
         try
         {
             await _bus.Advanced.PublishAsync(Exchange.Default, _queueName, true, properties, body);
-            Console.WriteLine("Publish successful.");
+            //Console.WriteLine("Publish successful.");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Publish failed: {ex.Message}");
+            throw new Exception();
+        }
+    }
+    
+    /**
+     * Starts an infinite loop if any messages have failed to publish and retries to publish the failed messages
+     */
+    private async Task EnsureAllFailedMessagesAreSent()
+    {
+        //Ensures only one retry loop runs at a time
+        await _retryLock.WaitAsync(); 
+        try
+        {
+            while (!_failedMessages.IsEmpty)
+            {
+                if (_failedMessages.TryDequeue(out var failedMessage))
+                {
+                    try
+                    {
+                        await PubByteArrayAsync(failedMessage);
+                        Console.WriteLine("Successfully retried a failed message.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Retry failed: {ex.Message}");
+                        //Re-add to queue for another attempt
+                        _failedMessages.Enqueue(failedMessage); 
+                        await Task.Delay(1000);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            _retryLock.Release();
         }
     }
     

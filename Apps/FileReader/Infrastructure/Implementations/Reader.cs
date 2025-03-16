@@ -4,20 +4,30 @@ namespace Infrastructure.Implementations;
 
 public class Reader : IReader
 {
-    
-public string[] GetFoldersPath(string rootFolderPath)
-{
-    return Directory.GetDirectories(rootFolderPath, "*", SearchOption.AllDirectories);
-}
+   
+    /**
+     * gets list of paths for folders in the given folder path
+     */
+    public string[] GetFoldersPath(string rootFolderPath)
+    {
+        return Directory.GetDirectories(rootFolderPath, "*", SearchOption.AllDirectories);
+    }
 
-public string[] GetFilesPathFromFolder(string folderPath)
-{
-    return Directory.GetFiles(folderPath);
-}
+    /**
+     * gets a list of file paths from the given folder path
+     */
+    public string[] GetFilesPathFromFolder(string folderPath)
+    {
+        return Directory.GetFiles(folderPath);
+    }
 
-public byte[] ReadFileAsByteArray(string filePath)
-{
-    return File.ReadAllBytes(filePath);
-}
+    /**
+     * retrieves a file as a bytearray from the given file path.
+     */
+    public byte[] ReadFileAsByteArray(string filePath)
+    {
+        return File.ReadAllBytes(filePath);
+    }
+
 
 }
