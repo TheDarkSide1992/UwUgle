@@ -37,15 +37,15 @@ services:
     depends_on:
       - database
   
-  readerservice:
-    image: readerservice
-    build:
-      context: .
-      dockerfile: Apps/FileReader/Dockerfile
-    environment:
-      - DOTNET_USE_POLLING_FILE_WATCHER=1 #This is only nesesarry for files 
-      - rabbitmq_connection=host=localhost;username=guest;password=guest;timeout=5;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5 #Connectionstring for rabbitmq
-      - file_folder=
+  #readerservice:
+   # image: readerservice
+    #build:
+    #  context: .
+    #  dockerfile: Apps/FileReader/Dockerfile
+    #environment:
+    #  - DOTNET_USE_POLLING_FILE_WATCHER=1 #This is only nesesarry for files 
+    #  - rabbitmq_connection=host=localhost;username=guest;password=guest;timeout=5;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5 #Connectionstring for rabbitmq
+     # - file_folder=
       
   
   database:
