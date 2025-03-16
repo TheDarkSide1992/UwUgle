@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using DefaultNamespace;
 using EasyNetQ;
 using EasyNetQ.Topology;
@@ -20,11 +19,7 @@ public class ReaderService : IService
     private readonly IReader _reader;
     
     private readonly IBus _bus;
-    private readonly string _queueName = "FilesV14";
-    
-    
-    // Create a thread-safe queue
-    private ConcurrentQueue<byte[]> _byteArrayQueue = new ConcurrentQueue<byte[]>();
+    private readonly string _queueName = "Files";
     
     public ReaderService(Reader reader)
     {
@@ -69,29 +64,26 @@ public class ReaderService : IService
         
             string[] allFolders = _reader.GetFoldersPath(rootFolderPath);
         
-            foreach (var folder in allFolders) 
-            { 
-                Console.WriteLine($"Processing folder: {folder}");
+            foreach (var folder in allFolders)
+            {
+                //Console.WriteLine($"Processing folder: {folder}");
                 string[] files = _reader.GetFilesPathFromFolder(folder);
 
-                
-                
-                    Parallel.ForEach(files, new ParallelOptions
+                await Parallel.ForEachAsync(files, new ParallelOptions { MaxDegreeOfParallelism = 100 },
+                    async (filePath, _) =>
                     {
-                        MaxDegreeOfParallelism = 100,
-                    }, filePath =>
-                    {
-                        request.RawMessage = _reader.ReadFileAsByteArray(filePath);
-                        PubByteArray(request);
+                        try
+                        {
+                            var request = new RawEvent { RawMessage = _reader.ReadFileAsByteArray(filePath) };
+                            await PubByteArrayAsync(request);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Failed to process file {filePath}: {ex.Message}");
+                        }
                     });
-                
-                
-                //checks if any messages failed to get publish and handles them by infinitely try to send them until they are sent
-                //handleFailedMessages();
-                
             }
             Thread.Sleep(1500);
-            Console.WriteLine($"Ammount of failed files: {_byteArrayQueue.Count}");
         }
         catch (Exception e)
         {
@@ -99,92 +91,22 @@ public class ReaderService : IService
         }
         
     }
-
-
-    private void PubByteArray(RawEvent content)
-    {
-        
-            MessageProperties properties = new MessageProperties
-            {
-                DeliveryMode = 2
-            }; // Persistent message
-            byte[] body = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(content);
-            _bus.Advanced.PublishAsync(Exchange.Default, _queueName, true, properties, body).ContinueWith(task =>
-            {
-                if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
-                {
-                    //Console.WriteLine("Publish completed fine.");
-                }
-                else
-                {
-                    AddByteArray(body);
-                    //Console.WriteLine("Publish failed.");
-                }
-                if (task.IsFaulted)
-                {
-                    Console.WriteLine(task.Exception);
-                }
-            });
-        
-    }
     
-    
-    private void BackUpPubByteArray(Byte[] content)
+    private async Task PubByteArrayAsync(RawEvent content)
     {
-        MessageProperties properties = new MessageProperties
-        {
-            DeliveryMode = 2
-        }; // Persistent message
-        _bus.Advanced.PublishAsync(Exchange.Default, _queueName, true, properties, content).ContinueWith(task =>
-        {
-            if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
-            {
-                TryGetByteArray(out content);
-                Console.WriteLine("Publish failed message, completed fine.");
-            }
-            else
-            {
-                Console.WriteLine("Publish failed, to publish failed message.");
-            }
-        });
-    }
+        MessageProperties properties = new MessageProperties { DeliveryMode = 2 };
+        byte[] body = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(content);
 
-
-    /*private void handleFailedMessages()
-    {
-       
-        while (.Count > 0)
+        try
         {
-            resolvedFailedMessages = new List<byte[]>();
-            foreach (var failedFile in failedMessages)
-            {
-                BackUpPubByteArray(failedFile);
-            }
-
-            if (failedMessages.Count > 0)
-            {
-                foreach (var sentFile in resolvedFailedMessages)
-                {
-                        failedMessages.Remove(sentFile);
-                }
-            }
-                    
+            await _bus.Advanced.PublishAsync(Exchange.Default, _queueName, true, properties, body);
+            Console.WriteLine("Publish successful.");
         }
-    }*/
-    
-    
-    
-
-    // Add a byte array (Thread-Safe)
-    public void AddByteArray(byte[] data)
-    {
-        _byteArrayQueue.Enqueue(data);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Publish failed: {ex.Message}");
+        }
     }
-
-    // Retrieve and remove a byte array (Thread-Safe)
-    public bool TryGetByteArray(out byte[] data)
-    {
-        return _byteArrayQueue.TryDequeue(out data);
-    }
+    
     
 }

@@ -11,11 +11,11 @@ public static class Program {
         IService _service;
         _service = new ReaderService(new Reader());
 
-        
+        // should contain 517.401 Files, 3.499 Folders
         string rootFolderPath = Environment.GetEnvironmentVariable("file_folder");
 
         var stopwatch = Stopwatch.StartNew();
-        _service.ReadFoldersSequentiallyWithParallelFilesAsBytes(rootFolderPath);
+        await Task.Run(() => _service.ReadFoldersSequentiallyWithParallelFilesAsBytes(rootFolderPath));
         stopwatch.Stop();
 
         Console.WriteLine($"\nTotal execution time: {stopwatch.ElapsedMilliseconds} ms");
