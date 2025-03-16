@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>UwUgle</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+</head>
+<body>
+
+<div style=" justify-content: center; margin-top: 15%; margin-bottom: 15%;">
+  <div class="columns">
+    <div class="rows" style="justify-content: center; scale: 500%; margin-bottom: 50%">
+      <h1 style="color: dodgerblue">U</h1>
+      <h1 style="color: red">w</h1>
+      <h1 style="color: orange">U</h1>
+      <h1 style="color: dodgerblue">g</h1>
+      <h1 style="color: green">l</h1>
+      <h1 style="color: red">e</h1>
+    </div>
+    <!--<h1>UwUgle</h1>-->
+    <br>
+    <div class="rows" style="scale: 275%">
+      <input type="text" id="query" placeholder="search here" [(ngModel)]="query"
+             (ngModelChange)="searchDocuments(query)"/>
+      <div *ngIf="documentSearchResults.length > 0" class="suggestions" style="flex-direction: column">
+        <div
+          *ngFor="let suggestion of documentSearchResults"
+          (click)="getDocuement(suggestion.documentID)"
+          class="suggestion-item">
+          {{ suggestion.documentName }}
+        </div>
+      </div>
+    </div>
+    <br>
+  </div>
+</div>
+
+</body>
+</html>
+
+
+<router-outlet/>

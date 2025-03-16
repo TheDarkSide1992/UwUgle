@@ -1,0 +1,80 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Base styles for both themes */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  input {
+    background-color: #dcdcdc;
+    color: #000000;
+    border: none;
+    outline: none;
+  }
+
+  .suggestions {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    color: black;
+    background-color: #e4e2e2;
+    max-height: 650%;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .suggestion-item {
+    padding: 2%;
+    cursor: pointer;
+  }
+
+  .suggestion-item:hover {
+    background-color: #b5e3ff;
+  }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #252525;
+    color: #ffffff;
+  }
+
+  input {
+    background-color: #c1c1c1;
+    color: #ffffff;
+    border: none;
+    outline: none;
+  }
+
+  .suggestions {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    color: ghostwhite;
+    background-color: #8e8e8e;
+    max-height: 650%;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .suggestion-item {
+    padding: 2%;
+    cursor: pointer;
+  }
+  .suggestion-item:hover {
+    background-color: lightskyblue;
+  }
+
+}

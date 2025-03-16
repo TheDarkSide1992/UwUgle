@@ -10,7 +10,7 @@ namespace Logger;
 
 public static class Monitoring
 {
-    public static readonly ActivitySource ActivitySource = new("RPS", "1.0.0");
+    public static readonly ActivitySource ActivitySource = new("UwUgle", "1.0.0");
     private static TracerProvider _tracerProvider;
 
     static Monitoring()
