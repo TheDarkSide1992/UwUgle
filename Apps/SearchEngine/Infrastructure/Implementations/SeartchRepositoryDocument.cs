@@ -35,7 +35,7 @@ public class SeartchRepositoryDocument : ISearchRespository<DocumentSimple, Docu
         using var conn = _dataSource.OpenConnection();
         
         var list = await conn.QueryAsync<DocumentEntity>(sql, new {
-            query = @$"%{query}%"
+            query = @$"%{query.Trim()}%"
         });
 
         return list.Select(entity => _mapper.FromEntityToDocumentSimple(entity)); //Maps entity element in list to DocumentSImple

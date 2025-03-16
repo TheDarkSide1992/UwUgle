@@ -5,6 +5,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "./Envirements/envirement";
 import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
+import {throwError} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -33,6 +34,12 @@ export class AppComponent {
         this.documentSearchResults = resData;
       })
     } catch (error) {
+      // @ts-ignore
+      if (error.status === 404) {
+        console.log("could not find resposne for " + query);
+      } else {
+        console.error("Unexspected error " + error);
+      }
     }
   }
 
