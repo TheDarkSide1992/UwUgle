@@ -9,13 +9,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Packages\Logger\Logger.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\..\..\Packages/Events/Events.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="EasyNetQ" Version="7.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Polly" Version="8.5.2" />
   </ItemGroup>
 
 </Project>

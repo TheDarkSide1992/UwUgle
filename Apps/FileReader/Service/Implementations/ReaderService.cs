@@ -9,7 +9,6 @@ using Infrastructure.Interfaces;
 using Logger;
 using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
-using Polly;
 using Serilog;
 using Service.Interfaces;
 
@@ -27,14 +26,11 @@ public class ReaderService : IService
     // Create a thread-safe queue
     private ConcurrentQueue<byte[]> _byteArrayQueue = new ConcurrentQueue<byte[]>();
     
-    
-    private readonly string connectionString =
-        "host=localhost;username=guest;password=guest;timeout=5;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5";
     public ReaderService(Reader reader)
     {
         
         _reader = reader;
-        _bus = RabbitHutch.CreateBus(connectionString);
+        _bus = RabbitMqConnectionHelper.GetRabbitMQConnection();
         _bus.Advanced.QueueDeclareAsync(name: _queueName).ContinueWith(task =>
         {
             if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
@@ -107,16 +103,7 @@ public class ReaderService : IService
 
     private void PubByteArray(RawEvent content)
     {
-        var policy = Policy.Handle<Exception>().CircuitBreakerAsync(3, TimeSpan.FromSeconds(60),
-            onBreak: (exception, TimeSpan) =>
-            {
-                Log.Logger.Warning("Circuit breaker in FileReader is on break");
-            }, onReset: () => {Log.Logger.Information("Circuit breaker in FileReader is reset");},
-            onHalfOpen: () => {Log.Logger.Information("Circuit breaker in FileReader is half open");});
         
-        
-        //policy.ExecuteAsync(async () =>
-        //{
             MessageProperties properties = new MessageProperties
             {
                 DeliveryMode = 2
@@ -126,19 +113,18 @@ public class ReaderService : IService
             {
                 if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
                 {
-                    Console.WriteLine("Publish completed fine.");
+                    //Console.WriteLine("Publish completed fine.");
                 }
                 else
                 {
                     AddByteArray(body);
-                    Console.WriteLine("Publish failed.");
+                    //Console.WriteLine("Publish failed.");
                 }
                 if (task.IsFaulted)
                 {
                     Console.WriteLine(task.Exception);
                 }
             });
-        //});
         
     }
     

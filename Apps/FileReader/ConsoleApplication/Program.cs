@@ -11,8 +11,8 @@ public static class Program {
         IService _service;
         _service = new ReaderService(new Reader());
 
-    
-        string rootFolderPath = @"C:\Users\emilw\Downloads\enron_mail_20150507.tar\enron_mail_20150507\maildir";
+        
+        string rootFolderPath = Environment.GetEnvironmentVariable("file_folder");
 
         var stopwatch = Stopwatch.StartNew();
         _service.ReadFoldersSequentiallyWithParallelFilesAsBytes(rootFolderPath);
