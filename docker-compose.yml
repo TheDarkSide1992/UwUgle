@@ -37,6 +37,15 @@ services:
     depends_on:
       - database
   
+  readerservice:
+    image: readerservice
+    build:
+      context: .
+      dockerfile: Apps/FileReader/Dockerfile
+    environment:
+      - DOTNET_USE_POLLING_FILE_WATCHER=1 #This is only nesesarry for files 
+      
+  
   database:
     image: postgres
     ports:

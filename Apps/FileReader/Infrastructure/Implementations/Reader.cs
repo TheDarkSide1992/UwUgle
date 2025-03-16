@@ -1,9 +1,4 @@
-﻿using System.Collections.Concurrent;
-using EasyNetQ;
-using EasyNetQ.Topology;
-using Infrastructure.Interfaces;
-using Logger;
-using Serilog;
+﻿using Infrastructure.Interfaces;
 
 namespace Infrastructure.Implementations;
 
