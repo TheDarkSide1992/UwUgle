@@ -41,14 +41,17 @@ public class Program
 
     public static async Task handleMessages()
     {
+        // Sets up variables
         var service = new IndexService();
         var connectionEstablished = false;
         using var bus = RabbitMqConnectionHelper.GetRabbitMQConnection();
         while (!connectionEstablished)
         {
+            // uses policy to exicute a subscription and handles the message
             policy.ExecuteAsync(async () =>
             {
                 {
+                    // gets messages from bus
                     var subscriptionResult = bus.PubSub.SubscribeAsync<CleanedEvent>("Cleaned", async e =>
                     {
                         var propagator = new TraceContextPropagator();
@@ -61,7 +64,8 @@ public class Program
                         using var activity = Monitoring.ActivitySource.StartActivity("Message Received",
                             ActivityKind.Consumer, parentContext.ActivityContext);
                         
-                        using var indexActivity = Monitoring.ActivitySource.StartActivity();
+                        // handles the given message
+                        using var indexActivity = Monitoring.ActivitySource.StartActivity(); // returns true if indexing was compleated and fales if indexing failed
                         
                         var indexStatus = await service.Index(e.CleanMessage);
                         if (indexStatus)
