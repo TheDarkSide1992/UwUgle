@@ -16,8 +16,8 @@ using Service.Implementations.converter;
 
 public static class Program
 {
-   
-    
+
+
     private static AsyncCircuitBreakerPolicy policy = Policy.Handle<Exception>().CircuitBreakerAsync(3, TimeSpan.FromSeconds(30),
         onBreak: (exception, TimeSpan) =>
         {
@@ -34,7 +34,7 @@ public static class Program
             using var activity = Monitoring.ActivitySource.StartActivity();
             Log.Logger.Information("Circuit breaker in Cleaner is half open");
         });
-    
+
     public static async Task Main()
     {
         while (true)
@@ -103,4 +103,4 @@ public static class Program
 
 
 
-    
+
