@@ -37,15 +37,6 @@ services:
     depends_on:
       - apiservice
 
-  frontend:
-    build:
-      context: ./Frontend
-      dockerfile: Dockerfile
-    ports:
-      - "8080:80"
-    depends_on:
-      - apiservice
-
   apiservice:
     image: searchengine
     build:
