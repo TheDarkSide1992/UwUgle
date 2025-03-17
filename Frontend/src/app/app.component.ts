@@ -5,7 +5,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "./Envirements/envirement";
 import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
-import {throwError} from "rxjs";
+import {Observable, throwError} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -22,9 +22,22 @@ export class AppComponent {
   constructor(private http: HttpClient) {
   }
 
-  async getDocuement(DocumentID: number) {
-    console.log(DocumentID);
+  getDocuement(DocumentID: number): Observable<Blob> {
+      return this.http.get(environment.baseURL+"/"+DocumentID, { responseType: 'blob' });
   }
+
+
+  download(DocumentID: number, FileName:string) {
+    this.getDocuement(DocumentID).subscribe((blob) => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.href = objectUrl;
+      a.download = FileName+".txt";
+      a.click();
+      URL.revokeObjectURL(objectUrl);
+    });
+  }
+
 
   async searchDocuments(query: string) {
     try {
@@ -38,7 +51,7 @@ export class AppComponent {
       if (error.status === 404) {
         console.log("could not find resposne for " + query);
       } else {
-        console.error("Unexspected error " + error);
+        console.error("Unexpected error " + error);
       }
     }
   }

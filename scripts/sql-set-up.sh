@@ -9,7 +9,7 @@ POSTGRES_PASSWORD="postgres"
 DB_NAME="UwUgleDB"
 
 # Path to SQL folder
-SQL_FOLDER="SQL/PostgresSQL"
+SQL_FOLDER="/SQL/PostgresSQL"
 
 export PGPASSWORD="POSTGRES_PASSWORD"
 

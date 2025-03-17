@@ -44,10 +44,14 @@ public class SearchEngineController : ControllerBase
         if (id <= 0) return BadRequest();
 
         Log.Logger.Here().Debug($@"Attempting to retrieve document {id} ");
-        
         Document result = await _service.GetFile(id);
-
-        return result.DocumentID <= 0 ? NotFound() : Ok(result); 
+        
+        if (result.DocumentID <= 0) return BadRequest();
+        
+        Response.Headers.Append("Content-Disposition", "attachment; filename=FileID" + result.DocumentID);
+        var file = File(result.File, "application/txt", result.DocumentName+".txt");
+        
+        return file;; 
         
     }
 }
