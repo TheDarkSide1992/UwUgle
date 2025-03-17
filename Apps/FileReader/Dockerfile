@@ -22,7 +22,7 @@ COPY Apps/FileReader/Service/ Apps/FileReader/Service/
 COPY Packages/Logger/ Packages/Logger/
 COPY Packages/Events/ Packages/Events/
 
-WORKDIR "Apps/Filereader/ConsoleApplication"
+WORKDIR "Apps/FileReader/ConsoleApplication"
 RUN dotnet build "ConsoleApplication.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

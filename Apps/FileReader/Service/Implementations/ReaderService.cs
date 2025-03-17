@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using DefaultNamespace;
 using EasyNetQ;
-using EasyNetQ.Topology;
 using Events;
 using Infrastructure.Implementations;
 using Infrastructure.Interfaces;
@@ -20,7 +19,7 @@ public class ReaderService : IService
     private readonly IReader _reader;
     
     private readonly IBus _bus;
-    private readonly string _queueName = "Files";
+    private readonly string _queueName = "DefaultNamespace.RawEvent, Events_Files";
     private readonly ConcurrentQueue<RawEvent> _failedMessages = new();
     private readonly SemaphoreSlim _retryLock = new(1, 1); // Prevents multiple retries at once
 
@@ -107,12 +106,9 @@ public class ReaderService : IService
      */
     private async Task PubByteArrayAsync(RawEvent content)
     {
-        MessageProperties properties = new MessageProperties { DeliveryMode = 2 };
-        byte[] body = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(content);
-
         try
         {
-            await _bus.Advanced.PublishAsync(Exchange.Default, _queueName, true, properties, body);
+            await _bus.PubSub.PublishAsync<RawEvent>(content);
             //Console.WriteLine("Publish successful.");
         }
         catch (Exception ex)
