@@ -25,7 +25,6 @@ public static class Monitoring
             {
                 options.Endpoint = new Uri(zipkinconn);
             })
-            .AddConsoleExporter()
             .AddSource(ActivitySource.Name)
             .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName: serviceName, serviceVersion: version))
             .Build();
@@ -35,7 +34,6 @@ public static class Monitoring
             .MinimumLevel.Debug()
             .Enrich.WithSpan()
             .WriteTo.Seq("http://seq:5341")
-            .WriteTo.Console()
             .CreateLogger();
     }
 }
