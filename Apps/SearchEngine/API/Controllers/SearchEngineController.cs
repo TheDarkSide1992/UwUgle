@@ -44,7 +44,6 @@ public class SearchEngineController : ControllerBase
         if (id <= 0) return BadRequest();
 
         Log.Logger.Here().Debug($@"Attempting to retrieve document {id} ");
-        Console.WriteLine($@"test");
         Document result = await _service.GetFile(id);
         
         if (result.DocumentID <= 0) return BadRequest();
