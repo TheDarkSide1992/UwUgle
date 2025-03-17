@@ -90,7 +90,8 @@ services:
     environment:
       - DOTNET_USE_POLLING_FILE_WATCHER=1 #This is only nesesarry for files 
       - rabbitmq_connection=host=localhost;username=guest;password=guest;timeout=5;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5 #Connectionstring for rabbitmq
-      - file_folder=C:\Users\emilw\Downloads\enron_mail_20150507.tar\enron_mail_20150507\maildir
+      - file_folder=${FOLDER} #gets envirement from console eks: FOLDER={Path} docker compose up --build
+      #- file_folder=../${FOLDER} #optionaly this might be nesesary
   
   database:
     image: postgres
