@@ -18,9 +18,13 @@ public static class Monitoring
         // Configure tracing
         var serviceName = Assembly.GetExecutingAssembly().GetName().Name;
         var version = "1.0.0";
+        var zipkinconn = "http://zipkin:9411/api/v2/spans";
 
         _tracerProvider = Sdk.CreateTracerProviderBuilder()
-            .AddZipkinExporter()
+            .AddZipkinExporter(configure: options =>
+            {
+                options.Endpoint = new Uri(zipkinconn);
+            })
             .AddConsoleExporter()
             .AddSource(ActivitySource.Name)
             .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName: serviceName, serviceVersion: version))
@@ -30,7 +34,7 @@ public static class Monitoring
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .Enrich.WithSpan()
-            .WriteTo.Seq("http://localhost:5341")
+            .WriteTo.Seq("http://seq:5341")
             .WriteTo.Console()
             .CreateLogger();
     }
