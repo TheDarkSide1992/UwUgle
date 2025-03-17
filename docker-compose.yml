@@ -12,22 +12,6 @@ services:
     ports:
       - 9411:9411
 
-  rmq:
-    image: rabbitmq:management
-    ports:
-      - 5672:5672
-      - 15672:15672
-    environment:
-      - RABBITMQ_DEFAULT_USER=application
-      - RABBITMQ_DEFAULT_PASS=pepsi
-    healthcheck:
-      test:
-        rabbitmq-diagnostics -q ping
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 10s
-
   frontend:
     build:
       context: ./Frontend
@@ -59,13 +43,12 @@ services:
       mode: replicated
       replicas: 3
     depends_on:
-      rmq:
-        condition: service_healthy
+      - haproxy
     build:
       context: .
       dockerfile: Apps/FileCleaner/Dockerfile
     environment:
-      - rabbitmq_connection=host=rmq;username=application;password=pepsi;timeout=5;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5
+      - rabbitmq_connection=host=haproxy;username=application;password=pepsi;timeout=5;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5
   
   fileindexer:
     image: fileindexer
@@ -76,10 +59,9 @@ services:
       mode: replicated
       replicas: 3
     depends_on:
-      rmq:
-        condition: service_healthy
+      - haproxy
     environment:
-      - rabbitmq_connection=host=rmq;username=application;password=pepsi;timeout=5;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5
+      - rabbitmq_connection=host=haproxy;username=application;password=pepsi;timeout=5;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5
       - pgconn=Host=database;Database=UwUgleDB;User Id=postgres;Password=postgres;Port=5432
 
   readerservice:
@@ -87,9 +69,11 @@ services:
     build:
       context: .
       dockerfile: Apps/FileReader/Dockerfile
+    depends_on:
+      - haproxy
     environment:
       - DOTNET_USE_POLLING_FILE_WATCHER=1 #This is only nesesarry for files 
-      - rabbitmq_connection=host=localhost;username=guest;password=guest;timeout=5;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5 #Connectionstring for rabbitmq
+      - rabbitmq_connection=host=haproxy;username=application;password=pepsi;timeout=5;publisherConfirms=true;prefetchcount=50;persistentMessages=true;connectIntervalAttempt=5 #Connectionstring for rabbitmq
       - file_folder=C:\Users\emilw\Downloads\enron_mail_20150507.tar\enron_mail_20150507\maildir
   
   database:
@@ -110,5 +94,87 @@ services:
       #secret looks like this:
       #Host=localhost\;Database=UwUgleDB\;User Id=postgres\;Password=postgres\;Port=5001
 
+
+  rabbitmq1:
+    image: rabbitmq:management
+    container_name: rmq
+    hostname: "rmq"
+    environment:
+      - RABBITMQ_DEFAULT_USER=application
+      - RABBITMQ_DEFAULT_PASS=pepsi
+      - RABBITMQ_ERLANG_COOKIE=secretcookie
+      - RABBITMQ_NODENAME=rabbit@rmq
+      - RABBITMQ_USE_LONGNAME="true"
+    volumes:
+      - rmq_data:/var/lib/rabbitmq
+      - ./scripts/rabbitmq-cluster-setup.sh:/usr/local/bin/cluster-entrypoint.sh
+    entrypoint: /usr/local/bin/cluster-entrypoint.sh
+    networks:
+      - rabbitmq
+
+  rabbitmq2:
+    image: rabbitmq:management
+    container_name: rmq2
+    hostname: "rmq2"
+    depends_on:
+      - rabbitmq1
+    environment:
+      - RABBITMQ_DEFAULT_USER=application
+      - RABBITMQ_DEFAULT_PASS=pepsi
+      - RABBITMQ_ERLANG_COOKIE=secretcookie
+      - RABBITMQ_NODENAME=rabbit@rmq2
+      - RABBITMQ_USE_LONGNAME="true"
+      - JOIN_CLUSTER_HOST=rmq
+    volumes:
+      - rmq2_data:/var/lib/rabbitmq
+      - ./scripts/rabbitmq-cluster-setup.sh:/usr/local/bin/cluster-entrypoint.sh
+    entrypoint: /usr/local/bin/cluster-entrypoint.sh
+    networks:
+      - rabbitmq
+
+  rabbitmq3:
+    image: rabbitmq:management
+    container_name: rmq3
+    hostname: "rmq3"
+    depends_on:
+      - rabbitmq1
+      - rabbitmq2
+    environment:
+      - RABBITMQ_DEFAULT_USER=application
+      - RABBITMQ_DEFAULT_PASS=pepsi
+      - RABBITMQ_ERLANG_COOKIE=secretcookie
+      - RABBITMQ_NODENAME=rabbit@rmq3
+      - RABBITMQ_USE_LONGNAME="true"
+      - JOIN_CLUSTER_HOST=rmq
+    volumes:
+      - rmq3_data:/var/lib/rabbitmq
+      - ./scripts/rabbitmq-cluster-setup.sh:/usr/local/bin/cluster-entrypoint.sh
+    entrypoint: /usr/local/bin/cluster-entrypoint.sh
+    networks:
+      - rabbitmq
+  
+  
+  haproxy:
+    image: haproxy:alpine
+    container_name: haproxy
+    depends_on:
+      - rabbitmq1
+      - rabbitmq2
+      - rabbitmq3
+    networks:
+      - rabbitmq
+    ports:
+      - "5672:5672"    # Expose RabbitMQ AMQP port
+      - "15672:15672"  # Expose RabbitMQ Management UI
+    volumes:
+      - ./Config/Haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+
+networks:
+  rabbitmq:
+    driver: bridge
+
 volumes:
   pgdata:
+  rmq_data:
+  rmq2_data:
+  rmq3_data:
