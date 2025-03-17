@@ -15,14 +15,16 @@ This project where made for purely educational purposes and should not be used f
 ## Running the app
 
 To sart Insert the files you want indexed Into [**`maildir`**](maildir).
-After this you can run the program by running
+After this you can run the program by running.
 > **`docker compose up`**
 
-In case you want to rebuild the application run the folowing(This might be nesesary after updates)
+In case you want to rebuild the application run the folowing(This might be nesesary after updates).
 > **`docker compose up --build`**
 
-In case you want to reset the database you should clear the docker volume **`uwugle_pgdata`**
+In case you want to reset the database you should clear the docker volume **`uwugle_pgdata`**.
+
+Once the app is running you can acces them on [**`http://localhost:8080/`**](http://localhost:8080/).
 
 
 ## Known Issues
- * In some situations the [**`sql-set-up.sh`**](scripts/sql-set-up.sh) might not function correctly. this can be sercomvented by changing the SQL_FOLDER to mtch relevant path for your docker instance
+ * In some situations the [**`sql-set-up.sh`**](scripts/sql-set-up.sh) might not function correctly. this can be sercomvented by changing the SQL_FOLDER to mtch relevant path for your docker instance.
