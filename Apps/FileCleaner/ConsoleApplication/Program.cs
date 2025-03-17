@@ -93,7 +93,7 @@ public static class Program
                 var wait = true;
                 while (wait)
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(5000);
                     wait = false;
                 }
             });

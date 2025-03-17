@@ -149,8 +149,8 @@ services:
       - JOIN_CLUSTER_HOST=rmq
     volumes:
       - rmq3_data:/var/lib/rabbitmq
-      - ./scripts/rabbitmq-cluster-setup.sh:/usr/local/bin/cluster-entrypoint.sh
-    entrypoint: /usr/local/bin/cluster-entrypoint.sh
+      - ./scripts/rabbitmq-cluster-setup.sh:/usr/local/bin/rabbitmq-cluster-setup.sh
+    entrypoint: /usr/local/bin/rabbitmq-cluster-setup.sh
     networks:
       - rabbitmq
   
