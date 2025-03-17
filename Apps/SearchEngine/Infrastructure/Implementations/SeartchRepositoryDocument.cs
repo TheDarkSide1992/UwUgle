@@ -26,7 +26,7 @@ public class SeartchRepositoryDocument : ISearchRespository<DocumentSimple, Docu
     {
         using var activity = Monitoring.ActivitySource.StartActivity();
 
-        var sql = $@"SELECT Files.file_id, Files.file_name, Files.content FROM Files 
+        var sql = $@"SELECT DISTINCT Files.file_id, Files.file_name, Files.content FROM Files 
                 JOIN Occurrences O on Files.file_id = O.file_id 
                 JOIN Words W on W.word_id = O.word_id 
                 WHERE word ILIKE @query;
